@@ -1,0 +1,26 @@
+{
+  "dataset": "Sleep Health and Lifestyle (Kaggle)",
+  "target": "Stress Level",
+  "n_rows": 374,
+  "sklearn_version": "1.7.2",
+  "cv_results": {
+    "ridge": {
+      "cv_rmse_mean": 0.4318,
+      "cv_rmse_std": 0.0722
+    },
+    "random_forest": {
+      "cv_rmse_mean": 0.2719,
+      "cv_rmse_std": 0.1091
+    },
+    "gradient_boosting": {
+      "cv_rmse_mean": 0.2515,
+      "cv_rmse_std": 0.1306
+    }
+  },
+  "best_model": "gradient_boosting",
+  "test_metrics": {
+    "mae": 0.0371,
+    "rmse": 0.0808,
+    "r2": 0.9979
+  }
+}

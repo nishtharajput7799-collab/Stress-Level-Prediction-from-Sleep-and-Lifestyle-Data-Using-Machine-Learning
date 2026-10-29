@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sleep & Stress Check | Wellbeing ML</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo" aria-hidden="true">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+      </span>
+      <div>
+        <div class="brand-name">Wellbeing ML</div>
+        <div class="brand-sub">Sleep &amp; Stress Check</div>
+      </div>
+    </div>
+    <span class="pill">Educational demo</span>
+  </header>
+
+  <main class="layout">
+    <section class="panel">
+      <h1>Estimate your stress level</h1>
+      <p class="lead">Enter your sleep and lifestyle details. A machine-learning model trained on a Kaggle sleep-health dataset returns an estimate on a 1–10 scale.</p>
+
+      <form id="form" novalidate>
+        <div class="group">
+          <h2 class="group-title">Profile</h2>
+          <div class="grid">
+            <label class="field">
+              <span class="label-row">Gender</span>
+              <select name="gender">
+                <option>Female</option>
+                <option>Male</option>
+              </select>
+            </label>
+
+            <label class="field">
+              <span class="label-row">Age</span>
+              <input type="number" name="age" min="10" max="100" value="35" />
+            </label>
+
+            <label class="field">
+              <span class="label-row">Occupation</span>
+              <input type="text" name="occupation" list="occupations" value="Nurse" />
+              <datalist id="occupations">
+                <option value="Software Engineer"></option>
+                <option value="Doctor"></option>
+                <option value="Nurse"></option>
+                <option value="Engineer"></option>
+                <option value="Teacher"></option>
+                <option value="Lawyer"></option>
+                <option value="Accountant"></option>
+                <option value="Scientist"></option>
+                <option value="Salesperson"></option>
+                <option value="Sales Representative"></option>
+                <option value="Manager"></option>
+              </datalist>
+            </label>
+
+            <label class="field">
+              <span class="label-row">BMI category</span>
+              <select name="bmi_category">
+                <option>Normal</option>
+                <option>Normal Weight</option>
+                <option>Overweight</option>
+                <option>Obese</option>
+              </select>
+            </label>
+          </div>
+        </div>
+
+        <div class="group">
+          <h2 class="group-title">Sleep</h2>
+          <div class="grid">
+            <label class="field">
+              <span class="label-row">Sleep duration <output data-for="sleep_duration" data-unit=" h"></output></span>
+              <input type="range" name="sleep_duration" min="3" max="12" step="0.1" value="7" />
+            </label>
+
+            <label class="field">
+              <span class="label-row">Quality of sleep <output data-for="quality_of_sleep" data-unit=" / 10"></output></span>
+              <input type="range" name="quality_of_sleep" min="1" max="10" step="1" value="7" />
+            </label>
+
+            <label class="field full">
+              <span class="label-row">Sleep disorder</span>
+              <select name="sleep_disorder">
+                <option>None</option>
+                <option>Insomnia</option>
+                <option>Sleep Apnea</option>
+              </select>
+            </label>
+          </div>
+        </div>
+
+        <div class="group">
+          <h2 class="group-title">Health &amp; activity</h2>
+          <div class="grid">
+            <label class="field full">
+              <span class="label-row">Physical activity <output data-for="physical_activity_level" data-unit=" min/day"></output></span>
+              <input type="range" name="physical_activity_level" min="0" max="180" step="5" value="45" />
+            </label>
+
+            <label class="field">
+              <span class="label-row">Daily steps</span>
+              <input type="number" name="daily_steps" min="0" max="60000" step="100" value="6000" />
+            </label>
+
+            <label class="field">
+              <span class="label-row">Resting heart rate (bpm)</span>
+              <input type="number" name="heart_rate" min="30" max="220" value="72" />
+            </label>
+
+            <label class="field">
+              <span class="label-row">Systolic BP (mmHg)</span>
+              <input type="number" name="systolic" min="70" max="250" value="120" />
+            </label>
+
+            <label class="field">
+              <span class="label-row">Diastolic BP (mmHg)</span>
+              <input type="number" name="diastolic" min="40" max="150" value="80" />
+            </label>
+          </div>
+        </div>
+
+        <div id="error" class="error" role="alert" hidden></div>
+
+        <div class="actions">
+          <button type="reset" class="btn secondary">Reset</button>
+          <button type="submit" id="submit" class="btn primary">Estimate stress level</button>
+        </div>
+      </form>
+    </section>
+
+    <aside id="result-panel" class="panel result-panel" data-state="empty" aria-live="polite">
+      <h2 class="result-title">Result</h2>
+
+      <div class="gauge">
+        <svg viewBox="0 0 200 115" role="img" aria-label="Stress level gauge">
+          <path class="gauge-bg" d="M 20 100 A 80 80 0 0 1 180 100" />
+          <path id="gauge-fg" class="gauge-fg" d="M 20 100 A 80 80 0 0 1 180 100" />
+        </svg>
+        <div class="gauge-center">
+          <div id="score" class="score">–</div>
+          <div class="scale">out of 10</div>
+        </div>
+      </div>
+
+      <div class="state" data-show="empty">
+        <p class="hint">Fill in the form and press <strong>Estimate</strong> to see your result here.</p>
+      </div>
+
+      <div class="state" data-show="loading">
+        <p class="hint">Running the model…</p>
+      </div>
+
+      <div class="state" data-show="done">
+        <div class="badge-wrap"><span id="category" class="badge"></span></div>
+        <h3 class="notes-title">General notes</h3>
+        <ul id="notes" class="notes"></ul>
+        <p id="disclaimer" class="disclaimer"></p>
+      </div>
+
+      <p class="model-note">The model was trained on working adults, so results for students or other age groups are less reliable.</p>
+    </aside>
+  </main>
+
+  <footer class="footer">
+    Educational project. Not a medical or psychological diagnosis.
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
